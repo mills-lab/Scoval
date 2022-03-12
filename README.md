@@ -29,13 +29,24 @@ samtools sort -t CB -o CB_sorted_bam input_bam
 python src/bamsplit.py CB_sorted_bam 
 ```
 
-1. Run Ginkgo or other similar coverage-based single-cell CNV caller to generate an initial callset.  
+2. Run Ginkgo or other similar coverage-based single-cell CNV caller to generate an initial callset  
 Ginkgo command line:
 ```
 
 ```
 
-2. Collect phased germline heterozygous SNPs from the same individual.
+3. Collect phased germline heterozygous SNPs from the same individual
 
-It would be at 5-columns table, including the SNP coordinates, reference and alternative allele and genotype. If the SNPs were called from 10X-linked reads, it should have another phase set column. An example can be found in `data/wg_het_snp.tsv`.
+Extract the SNP information from VCF file:
+```
+python src/phased_hetSNPs.py -v VCF_FILE
+```
+It will generate two files. One is a pickle file (phased_het_snp.pkl) containing a 6-columns table to have the detailed information about the phased heterozygous SNPs (chromosome, position, reference allele, alternative allele, genotype, phase set). Another is a tsv file (phased_het_snp_pos.tsv) contaiing the first two columns for the next step analysis.
+
+4. Count the number of informative reads (reads that overlap with phased het-SNP), and make the 100 het-SNPs windows  
+The command lines are:
+```
+samtools mpileup -q 13 -Q 13 -l phased_het_snp_pos.tsv single_cell_bam_file > mpileup_result
+python count_mpileup_and_make_windows.py -s phased_het_snp.pkl -m mpileup_result -w 100 -s 100 --out window_info.pkl
+```
 
