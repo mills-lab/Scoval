@@ -6,12 +6,36 @@ import sys
 import os
 import logging
 import pysam
-
+import argparse
 
 
 FORMAT = '%(levelname)s %(asctime)-15s %(name)-20s %(message)s'
 logging.basicConfig(level=logging.INFO, format=FORMAT)
 logger = logging.getLogger(__name__)
+
+
+def parse_args(args):
+    description = "Split CB tag sorted bam file into single-cell bams."
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument("-i","--input", required=True, type=str, help="CB tag sorted bam file which includes all the cells")
+    parser.add_argument("-b","--barcode", required=True, type=str, help="barcode list file, each line is a unique barcode")
+    parser.add_argument("-t", "--threads", type=int, required=False, default=1, help="number of threads for multi-threading")
+    parser.add_argument("-o", "--out", type=str, required=False, default='./', help="Running directory where to write the single-cell bams (default: current directory)")
+    args = parser.parse_args(args)
+
+    if not os.path.isfile(args.input):
+        raise ValueError("input bam file does not exist!")
+    if not os.path.isfile(args.barcode):
+        raise ValueError("barcode list file does not exist!")
+    if not os.path.isdir(args.outdir):
+        raise ValueError(f"Running directory does not exists: {args.outdir}")
+
+    return {
+        'bam' : args.input,
+        'bc_file' : args.barcode,
+        'n_threads' : args.threads,
+        'rundir' : os.path.abspath(args.outdir)
+    }
 
 
 # each line is a barcode in the file
@@ -62,8 +86,18 @@ def split_bam(bc_sorted_bam, barcode_set, output_dir, thread):
             pysam.index("-@", str(thread), out_sort_bam, out_sort_bam_index)
             break
 
-if __name__ == "__main__":
-    input_sorted_bam, barcode_list, thread, output_dir = sys.argv[1:]
 
-    bc_set = read_barcode(barcode_list)
-    split_bam(input_sorted_bam, bc_set, output_dir, thread)
+def main(args=None):
+    args = parse_args(args)
+    logger.info('\n'.join(['Arguments:'] + [f'{a} : {args[a]}' for a in args]))
+    
+    logger.info("Split CB tag sorted bam file into single-cell bams.")
+
+    bc_set = read_barcode(args.bc_file)
+
+    logger.info("begin to split...")
+    split_bam(args.bam, bc_set, args.rundir, args.n_threads)
+
+
+if __name__ == "__main__":
+    main()
