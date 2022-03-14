@@ -15,8 +15,7 @@ We developed Scoval, a Single-cell sequencing COVerage and ALlele-based approach
 
 
 ## SOP to generate final callset
-1. split the bam file into the single-cell bams by the cell barcode
-
+1. split the bam file into the single-cell bams by the cell barcode.  
 The duplicates, low-quality and supplementary alignments should be filtered out from the original bam file. The example command lines are:
 ```
 samtools view -bh -F 3840 input_sorted_bam > output_filtered_bam
@@ -26,27 +25,33 @@ To split the bam into single-cell bams, we first sort the original bam by the ba
 The command lines are:
 ```
 samtools sort -t CB -o CB_sorted_bam input_bam
-python src/bamsplit.py CB_sorted_bam 
+python src/bamsplit.py -i CB_sorted_bam -b barcode_list -t N_thread -o output_dir
 ```
+Here in the barcode list file, each line is a unique barcode(CB tag) in the bam file. N_thread is the number of threads for multi-threading.
 
-2. Run Ginkgo or other similar coverage-based single-cell CNV caller to generate an initial callset  
+2. Run Ginkgo or other similar coverage-based single-cell CNV caller to generate an initial callset.  
 Ginkgo command line:
 ```
 
 ```
 
-3. Collect phased germline heterozygous SNPs from the same individual
-
+3. Collect phased germline heterozygous SNPs from the same individual.  
 Extract the SNP information from VCF file:
 ```
 python src/phased_hetSNPs.py -v VCF_FILE
 ```
 It will generate two files. One is a pickle file (phased_het_snp.pkl) containing a 6-columns table to have the detailed information about the phased heterozygous SNPs (chromosome, position, reference allele, alternative allele, genotype, phase set). Another is a tsv file (phased_het_snp_pos.tsv) contaiing the first two columns for the next step analysis.
 
-4. Count the number of informative reads (reads that overlap with phased het-SNP), and make the 100 het-SNPs windows  
+4. Count the number of informative reads (reads that overlap with phased het-SNP), make the 100 het-SNPs windows, and calculate the log2 ratio for each window.
 The command lines are:
 ```
 samtools mpileup -q 13 -Q 13 -l phased_het_snp_pos.tsv single_cell_bam_file > mpileup_result
-python count_mpileup_and_make_windows.py -s phased_het_snp.pkl -m mpileup_result -w 100 -s 100 --out window_info.pkl
+python src/count_mpileup_and_make_windows.py -s phased_het_snp.pkl -m mpileup_result -w 100 -s 100 --out window_info.pkl
+```
+
+5. Merge the window information from all the cells, split the tables by chromosomes, and mask windows that has small number informative reads with NA.  
+The command line is:
+```
+python src/merge_and_split_chr.py -i input_window_info_dir -b barcode_list -a outdir_allele_count -s outdir_sum_allele_counts -l outdir_log2_ratio -o outdir_abs_log2_ratio
 ```
 
