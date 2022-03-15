@@ -12,6 +12,7 @@ We developed Scoval, a Single-cell sequencing COVerage and ALlele-based approach
 | samtools | 1.9+    |
 | bcftools |         |
 | pysam    | 0.15.3+ |
+| bedtools | 2.29.2+ |
 
 
 ## SOP to generate final callset
@@ -53,5 +54,18 @@ python src/count_mpileup_and_make_windows.py -s phased_het_snp.pkl -m mpileup_re
 The command line is:
 ```
 python src/merge_and_split_chr.py -i input_window_info_dir -b barcode_list -a outdir_allele_count -s outdir_sum_allele_counts -l outdir_log2_ratio -o outdir_abs_log2_ratio
+```
+
+6. Generate non-CNV permutation data. We first generate 100 random shuffling CNV callsets on the whole autosome genome.  
+The command line is:
+```
+for i in {0..100}
+do
+bedtools shuffle -i ginkgo_autosome_calls.bed -g hg19.autosomes.chrom.sizes > perm_dir/perm{i}.bed
+done
+```
+Then exclude the regions overlapped with Ginkgo CNV.  
+```
+python src/exclude_CNV.py ginkgo_autosome_calls.bed perm_dir barcode_list all_non_CNV_perm.bed
 ```
 
