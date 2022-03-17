@@ -34,6 +34,7 @@ def parse_args(args):
         'out' : os.path.abspath(args.out)
     }
 
+
 def process_count(m):
     m1 = m.replace('$', '')
     m2 = m1.replace('*', '')
