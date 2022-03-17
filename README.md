@@ -76,7 +76,7 @@ The command lines are:
 python src/cal_empiricalPvalue_across_allcells_withNA.py ginkgo_autosome_calls.bed abs_log2_ratio_dir out_CNV_pkl
 # for non-CNV calls
 # add the header line first. The headers are "chrom", "start", "end", "bam", "CN", "barcode"
-python src/cal_empiricalPvalue_across_allcells_withNA.py ginkgo_autosome_calls.bed abs_log2_ratio_dir out_nonCNV_pkl
+python src/cal_empiricalPvalue_across_allcells_withNA.py all_non_CNV_perm.bed abs_log2_ratio_dir out_nonCNV_pkl
 ```
 
 8. Build the Gausssian mixture model (GMM) to calculate the posteror probability for each CNV call. Users could go through the jupyter notebook `src/GMM.ipynb` to generate the filtered calls. Users should change the input and output file names in the notebook.    
