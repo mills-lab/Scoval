@@ -47,7 +47,7 @@ It will generate two files. One is a pickle file (phased_het_snp.pkl) containing
 The command lines are:
 ```
 samtools mpileup -q 13 -Q 13 -l phased_het_snp_pos.tsv single_cell_bam_file > mpileup_result
-python src/count_mpileup_and_make_windows.py -s phased_het_snp.pkl -m mpileup_result -w 100 -s 100 --out window_info.pkl
+python src/count_mpileup_and_make_windows.py -s phased_het_snp.pkl -m mpileup_result -w 100 -p 100 --out window_info.pkl
 ```
 
 5. Merge the window information from all the cells, split the tables by chromosomes, and mask windows that has small number informative reads with NA.  
