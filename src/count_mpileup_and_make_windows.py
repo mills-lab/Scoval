@@ -125,7 +125,7 @@ def main(args=None):
     mpileup_df = pd.read_csv(args["mpileup"], sep="\t", header = None, names=["chrom","pos","tmp1","tmp2","allele","tmp3"])
 
     count_df = convert(het_df, mpileup_df)
-    out_df = make_window(count_df, args["window_size"], args["step_size"])
+    out_df = make_window(count_df, args["window"], args["step"])
     out_df.to_pickle(args["out"])
 
 
