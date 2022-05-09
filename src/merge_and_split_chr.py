@@ -104,38 +104,38 @@ def main(args=None):
     logger.info("merge the window information from all the cells, split the tables by chromosomes, and mask windows that has small number informative reads with NA.")
 
     barcode_list = []
-    with open(args.bc_file) as fin:
+    with open(args["bc_file"]) as fin:
         for line in fin:
             barcode = line.strip()
             barcode_list.append(barcode)
 
     logger.info("allele count...")
-    extract_info(args.window_info_dir, barcode_list, "allele_count", 4, args.allele_count_dir)
+    extract_info(args["window_info_dir"], barcode_list, "allele_count", 4, args["allele_count_dir"])
 
     logger.info("sum count...")
-    extract_info(args.window_info_dir, barcode_list, "sum_count", 5, args.sum_count_dir)
+    extract_info(args["window_info_dir"], barcode_list, "sum_count", 5, args["sum_count_dir"])
 
     logger.info("log2 ratio...")
-    extract_info(args.window_info_dir, barcode_list, "log2ratio", 6, args.log2ratio_dir)
+    extract_info(args["window_info_dir"], barcode_list, "log2ratio", 6, args["log2ratio_dir"])
 
     logger.info("absolute log2 ratio and filtering...")
     chrom_list = list(map(str, range(1,23)))
     for chrom in chrom_list:
-        ratio_pkl = os.path.join(args.log2ratio_dir, chrom+".log2ratio.100.100.pkl")
-        countSum_pkl = os.path.join(args.sum_count_dir, chrom+".sum_count.100.100.pkl")
+        ratio_pkl = os.path.join(args["log2ratio_dir"], chrom+".log2ratio.100.100.pkl")
+        countSum_pkl = os.path.join(args["sum_count_dir"], chrom+".sum_count.100.100.pkl")
         countSum_df = pd.read_pickle(countSum_pkl)
         ratio_df = pd.read_pickle(ratio_pkl)
 
         abs_df = pd.concat([ratio_df.iloc[:,:4], np.abs(ratio_df.iloc[:,4:])], axis=1)
 
-        abs_pkl = os.path.join(args.out_abslog2ratio, chrom+".abslog2ratio.100.100.pkl")
+        abs_pkl = os.path.join(args["abslog2ratio_dir"], chrom+".abslog2ratio.100.100.pkl")
         abs_df.to_pickle(abs_pkl)
 
         filtered_ratio_df = replace2na(ratio_df, countSum_df, cutoff=args.cutoff)
-        filtered_ratio_df.to_pickle(os.path.join(args.log2ratio_dir, chrom+"_log2ratio.filtered.100.100.pkl"))
+        filtered_ratio_df.to_pickle(os.path.join(args["log2ratio_dir"], chrom+"_log2ratio.filtered.100.100.pkl"))
 
         filtered_absratio_df = replace2na(abs_df, countSum_df, cutoff=args.cutoff)
-        filtered_absratio_df.to_pickle(os.path.join(args.abslog2ratio_dir, chrom+"_abslog2ratio.filtered.100.100.pkl"))
+        filtered_absratio_df.to_pickle(os.path.join(args["abslog2ratio_dir"], chrom+"_abslog2ratio.filtered.100.100.pkl"))
 
 
 

@@ -93,10 +93,10 @@ def main(args=None):
     
     logger.info("Split CB tag sorted bam file into single-cell bams.")
 
-    bc_set = read_barcode(args.bc_file)
+    bc_set = read_barcode(args["bc_file"])
 
     logger.info("begin to split...")
-    split_bam(args.bam, bc_set, args.rundir, args.n_threads)
+    split_bam(args["bam"], bc_set, args["rundir"], args["n_threads"])
 
 
 if __name__ == "__main__":
