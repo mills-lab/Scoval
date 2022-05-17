@@ -44,6 +44,7 @@ def read_barcode(barcode_list):
     with open(barcode_list) as fin:
         for line in fin:
             barcodes.add(line.strip())
+    return  barcodes
 
 
 def split_bam(bc_sorted_bam, barcode_set, output_dir, thread):
