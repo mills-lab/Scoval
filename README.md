@@ -31,10 +31,8 @@ python src/bamsplit.py -i CB_sorted_bam -b barcode_list -t N_thread -o output_di
 Here in the barcode list file, each line is a unique barcode(CB tag) in the bam file. N_thread is the number of threads for multi-threading.
 
 2. Run Ginkgo or other similar coverage-based single-cell CNV caller to generate an initial callset.  
-Ginkgo command line:
-```
-
-```
+We used an adaption version of Ginkgo to call CNV. Please refer to this pipeline:
+https://github.com/kunalkathuria/adaptedGinkgo
 
 3. Collect phased germline heterozygous SNPs from the same individual.  
 Extract the SNP information from VCF file:
