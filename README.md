@@ -10,7 +10,7 @@ We developed Scoval, a Single-cell sequencing COVerage and ALlele-based approach
 |----------|---------|
 | Python   | 3.7+    |
 | samtools | 1.9+    |
-| bcftools |         |
+| bcftools | 1.12+   |
 | pysam    | 0.15.3+ |
 | bedtools | 2.29.2+ |
 
@@ -34,7 +34,7 @@ Here in the barcode list file, each line is a unique barcode(CB tag) in the bam 
 We used an adaption version of Ginkgo to call CNV. Please refer to this pipeline:
 https://github.com/kunalkathuria/adaptedGinkgo
 
-3. Collect phased germline heterozygous SNPs from the same individual.  
+3. Collect phased germline heterozygous SNPs from the same individual. Please use the bam files in the `demo_data` folder as an example input. There are 20 example bam files with the sequencing reads in the region of `chr1:70719280-95261033`. One cell (`GCAAACTTCTGGTCCT`) has a heterozygous deletion in the region of `chr1:76719280-89261033`. Other cells do not have CNV. There is also an example vcf file in the `demo_data` folder.
 Extract the SNP information from VCF file:
 ```
 python src/phased_hetSNPs.py -v VCF_FILE
