@@ -16,6 +16,9 @@ We developed Scoval, a Single-cell sequencing COVerage and ALlele-based approach
 
 
 ## SOP to generate final callset
+
+Estimated time for step1 would be depends on the size of real data, it takes a few hours to run on about 2,000 cells. It will take less than 10 minutes to run through the total pipeline on the demo data.
+
 1. split the bam file into the single-cell bams by the cell barcode.  
 The duplicates, low-quality and supplementary alignments should be filtered out from the original bam file. The example command lines are:
 ```
