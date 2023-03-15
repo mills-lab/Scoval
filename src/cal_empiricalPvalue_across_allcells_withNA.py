@@ -39,6 +39,10 @@ def validate(cnv_call_file, ratio_pkl_dir):
     out_df["median_log2"] = 0.0
     out_df["pvalue"] = 0.0
     for index, row in cnv_df.iterrows():
+        if "bam" in row:
+            barcode = row["bam"].split(".")[0]
+        else:
+            barcode = row["barcode"].split("-")[0]
         ratio_df = ratio_dict[row["chrom"]]
         try:
             start_index = get_start_index(ratio_df, row["start"])
@@ -53,7 +57,7 @@ def validate(cnv_call_file, ratio_pkl_dir):
         else:
             bg_ratio_values = ratio_df.iloc[start_index:end_index+1, 4:].apply(np.nanmedian, 0).values
                         
-            cell_ratio = np.nanmedian(ratio_df.iloc[start_index:end_index+1].loc[:, row["barcode"]])
+            cell_ratio = np.nanmedian(ratio_df.iloc[start_index:end_index+1].loc[:, barcode])
             if np.isnan(cell_ratio):
                 pvalue = np.nan
             else:
