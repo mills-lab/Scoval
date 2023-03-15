@@ -131,10 +131,10 @@ def main(args=None):
         abs_pkl = os.path.join(args["abslog2ratio_dir"], chrom+".abslog2ratio.100.100.pkl")
         abs_df.to_pickle(abs_pkl)
 
-        filtered_ratio_df = replace2na(ratio_df, countSum_df, cutoff=args.cutoff)
+        filtered_ratio_df = replace2na(ratio_df, countSum_df, cutoff=args["cutoff"])
         filtered_ratio_df.to_pickle(os.path.join(args["log2ratio_dir"], chrom+"_log2ratio.filtered.100.100.pkl"))
 
-        filtered_absratio_df = replace2na(abs_df, countSum_df, cutoff=args.cutoff)
+        filtered_absratio_df = replace2na(abs_df, countSum_df, cutoff=args["cutoff"])
         filtered_absratio_df.to_pickle(os.path.join(args["abslog2ratio_dir"], chrom+"_abslog2ratio.filtered.100.100.pkl"))
 
 
