@@ -20,7 +20,7 @@ def parse_args(args):
     parser.add_argument("-i","--input", required=True, type=str, help="CB tag sorted bam file which includes all the cells")
     parser.add_argument("-b","--barcode", required=True, type=str, help="barcode list file, each line is a unique barcode")
     parser.add_argument("-t", "--threads", type=int, required=False, default=1, help="number of threads for multi-threading")
-    parser.add_argument("-o", "--out", type=str, required=False, default='./', help="Running directory where to write the single-cell bams (default: current directory)")
+    parser.add_argument("-o", "--outdir", type=str, required=False, default='./', help="Running directory where to write the single-cell bams (default: current directory)")
     args = parser.parse_args(args)
 
     if not os.path.isfile(args.input):
