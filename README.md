@@ -88,7 +88,7 @@ The command line is:
 ```
 for i in {0..100}
 do
-bedtools shuffle -i ginkgo_autosome_calls.bed -g hg19.autosomes.chrom.sizes > perm_dir/perm{i}.bed
+bedtools shuffle -i ginkgo_autosome_calls.bed -g hg19.autosomes.chrom.sizes > perm_dir/perm$i.bed
 done
 ```
 The columns of `ginkgo_autosome_calls.bed` are `chrom`, `start`, `end`, `bam`, `copy_number`, `barcode`, `size`
