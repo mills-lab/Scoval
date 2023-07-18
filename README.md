@@ -91,6 +91,8 @@ do
 bedtools shuffle -i ginkgo_autosome_calls.bed -g hg19.autosomes.chrom.sizes > perm_dir/perm{i}.bed
 done
 ```
+The columns of `ginkgo_autosome_calls.bed` are `chrom`, `start`, `end`, `bam`, `copy_number`, `barcode`, `size`
+
 Then exclude the regions overlapped with Ginkgo CNV.  
 ```
 python src/exclude_CNV.py ginkgo_autosome_calls.bed perm_dir barcode_list all_non_CNV_perm.bed
