@@ -106,7 +106,7 @@ The command lines are:
 # for CNV calls
 python src/cal_empiricalPvalue_across_allcells_withNA.py ginkgo_autosome_calls.bed abs_log2_ratio_dir out_CNV_pkl
 # for non-CNV calls
-# add the header line first. The headers are "chrom", "start", "end", "bam", "CN", "barcode"
+# add the header line first to the file all_non_CNV_perm.bed. The headers are "chrom", "start", "end", "bam", "CN", "barcode"
 python src/cal_empiricalPvalue_across_allcells_withNA.py all_non_CNV_perm.bed abs_log2_ratio_dir out_nonCNV_pkl
 ```
 
