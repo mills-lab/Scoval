@@ -92,26 +92,28 @@ def get_info(df, pseudocount=0.1):
 def make_window(count_df, window_size, step_size):
     out_df = pd.DataFrame(columns=["chrom", "start", "end", "ps", "allele_count", "sum_count", "log2ratio"])
 
-    ps_list = count_df.ps.unique()
-
-    for ps in ps_list:
-        ps_df = count_df[count_df["ps"]==ps].copy()
-        if ps_df.shape[0] <= window_size:
-            allele_count, sum_count, log2ratio = get_info(ps_df)
-            tmp_series = pd.Series({"chrom": ps_df.iloc[0,0], "start": ps_df.iloc[0,1], "end": ps_df.iloc[-1, 1], "ps":ps, "allele_count": allele_count, "sum_count": sum_count, "log2ratio": log2ratio})
-            out_df = out_df.append(tmp_series, ignore_index = True)
-        else:
-            start_index = list(range(0, ps_df.shape[0], window_size))
-            end_index = list(range(step_size, ps_df.shape[0], window_size)) + [ps_df.shape[0]]
-
-            for i in range(len(start_index)):
-                sub_df = ps_df.iloc[start_index[i]:end_index[i]].copy()
-                sub_chrom = sub_df.iloc[0,0]
-                sub_start = sub_df.iloc[0,1]
-                sub_end = sub_df.iloc[-1,1]
-                allele_count, sum_count, log2ratio = get_info(sub_df)
-                tmp_series = pd.Series({"chrom": sub_chrom, "start": sub_start, "end": sub_end, "ps": ps, "allele_count": allele_count, "sum_count": sum_count, "log2ratio": log2ratio})
+    chrom_list = count_df["chrom"].unique()
+    for chrom in chrom_list:
+        chrom_count_df = count_df[count_df["chrom"]==chrom].copy()
+        ps_list = chrom_count_df.ps.unique()
+        for ps in ps_list:
+            ps_df = chrom_count_df[chrom_count_df["ps"]==ps].copy()
+            if ps_df.shape[0] <= window_size:
+                allele_count, sum_count, log2ratio = get_info(ps_df)
+                tmp_series = pd.Series({"chrom": ps_df.iloc[0,0], "start": ps_df.iloc[0,1], "end": ps_df.iloc[-1, 1], "ps":ps, "allele_count": allele_count, "sum_count": sum_count, "log2ratio": log2ratio})
                 out_df = out_df.append(tmp_series, ignore_index = True)
+            else:
+                start_index = list(range(0, ps_df.shape[0], window_size))
+                end_index = list(range(step_size, ps_df.shape[0], window_size)) + [ps_df.shape[0]]
+
+                for i in range(len(start_index)):
+                    sub_df = ps_df.iloc[start_index[i]:end_index[i]].copy()
+                    sub_chrom = sub_df.iloc[0,0]
+                    sub_start = sub_df.iloc[0,1]
+                    sub_end = sub_df.iloc[-1,1]
+                    allele_count, sum_count, log2ratio = get_info(sub_df)
+                    tmp_series = pd.Series({"chrom": sub_chrom, "start": sub_start, "end": sub_end, "ps": ps, "allele_count": allele_count, "sum_count": sum_count, "log2ratio": log2ratio})
+                    out_df = out_df.append(tmp_series, ignore_index = True)
     return out_df
 
 
